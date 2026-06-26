@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_telegram_messages
+    description: "Cleaned and cast base model for ingested medical Telegram messages. Raw text payloads are trimmed and empty values are filtered out."
+    columns:
+      - name: message_id
+        description: "The unique integer identity key for a channel message."
+      - name: channel_name
+        description: "The clean string name of the originating Telegram community channel."
+      - name: message_at
+        description: "The standardized timestamp indicating exactly when the post went live, adjusted to include timezone tracking."
+      - name: message_text
+        description: "The primary textual content payload stripped of whitespace."
+      - name: view_count
+        description: "Total measured views captured at ingestion time."
+      - name: forward_count
+        description: "Total measured shares and forwards accumulated by the message."
+      - name: has_media
+        description: "Boolean flag showing if the underlying message payload holds embedded media or imagery."
+      - name: message_length
+        description: "Calculated metric capturing the total character footprint size of the post text."

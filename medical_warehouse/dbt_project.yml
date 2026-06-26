@@ -1,1 +1,25 @@
-ÿþ
+name: 'medical_warehouse'
+version: '1.0.0'
+profile: 'medical-telegram-warehouse'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  medical_warehouse:
+    # Staging models stay as lightweight views
+    staging:
+      +materialized: view
+      
+    # Marts (Dimensions and Facts) materialize as solid, fast physical tables
+    marts:
+      +materialized: table

@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: dim_channels
+    description: "Dimension table tracking unique Telegram channels and high-level interaction metrics."
+    columns:
+      - name: channel_key
+        description: "Primary Key (MD5 Surrogate Hash) for the channel."
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_dates
+    description: "Dimension table tracking unique calendar dates decomposed into standard reporting parts."
+    columns:
+      - name: date_key
+        description: "Primary Key (Integer YYYYMMDD) for the date."
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_messages
+    description: "Central Fact table storing quantitative data, metric logs, and dimension keys for individual messages."
+    columns:
+      - name: message_id
+        description: "Primary Key identifying an individual channel message."
+        tests:
+          - unique
+          - not_null
+
+      - name: channel_key
+        description: "Foreign Key linking back to dim_channels."
+        tests:
+          - not_null
+          - relationships:
+              field: channel_key
+              to: ref('dim_channels')
+
+      - name: date_key
+        description: "Foreign Key linking back to dim_dates."
+        tests:
+          - not_null
+          - relationships:
+              field: date_key
+              to: ref('dim_dates')

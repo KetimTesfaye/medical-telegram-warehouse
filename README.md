@@ -1,3 +1,9 @@
+Medical Telegram Data Warehouse
+
+An end-to-end ELT pipeline processing structured and unstructured public Telegram medical channel feeds in Ethiopia.
+
+Current Setup Task 1: Complete. Implemented raw Data Lake extraction using Telethon and partitioned storage formats.
+
 Task 2: Data Transformation & Analytics Warehouse (dbt)
 In this phase, the raw operational database layer was transformed into a clean, production-grade Star Schema Data Warehouse using dbt (Data Build Tool) and PostgreSQL.
 

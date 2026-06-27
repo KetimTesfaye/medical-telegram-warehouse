@@ -1,0 +1,12 @@
+{
+  "database": {
+    "host": "localhost",
+    "name": "medical-telegram-warehouse",
+    "user": "postgres",
+    "port": "5432"
+  },
+  "pipeline": {
+    "max_retries": 3,
+    "retry_delay_seconds": 5
+  }
+}

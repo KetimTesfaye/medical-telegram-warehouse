@@ -42,7 +42,7 @@ def get_top_products(
             COUNT(*) as mention_count
         FROM (
             SELECT regexp_split_to_table(lower(message_text), '\s+') as word 
-            FROM public.fct_messages 
+            FROM staging.fct_messages 
             WHERE message_text IS NOT NULL
         ) sub
         WHERE length(word) > 4 
@@ -70,8 +70,8 @@ def get_channel_activity(
             COUNT(fm.message_id) as total_messages,
             COALESCE(AVG(fm.view_count), 0)::float as avg_views,
             COALESCE(AVG(fm.forward_count), 0)::float as avg_forwards
-        FROM public.fct_messages fm
-        JOIN public.dim_channels dc ON fm.channel_key = dc.channel_key
+        FROM staging.fct_messages fm
+        JOIN staging.dim_channels dc ON fm.channel_key = dc.channel_key
         WHERE LOWER(dc.channel_name) = LOWER(:channel_name)
         GROUP BY dc.channel_name;
     """)
@@ -80,7 +80,7 @@ def get_channel_activity(
         if not row:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, 
-                detail=f"Channel tracking name '{channel_name}' could not be located inside our warehouse logs."
+                detail=f"Channel tracking name '{channel_name}' could not be located inside our warehouse staging logs."
             )
         return {
             "channel_name": row.channel_name,
@@ -103,7 +103,7 @@ def search_messages(
     """Executes full-text keyword searches against production warehouse tables using safe parameter bindings."""
     sql = text("""
         SELECT message_id, channel_key, date_key, message_text, view_count, forward_count
-        FROM public.fct_messages
+        FROM staging.fct_messages
         WHERE message_text ILIKE :search_pattern
         LIMIT :limit;
     """)
@@ -133,9 +133,9 @@ def get_visual_content_stats(db: Session = Depends(get_db)):
             fid.image_category,
             COUNT(*) as total_images,
             COALESCE(AVG(fm.view_count), 0)::float as average_views
-        FROM public.fct_image_detections fid
-        JOIN public.fct_messages fm ON fid.message_id = fm.message_id
-        JOIN public.dim_channels dc ON fm.channel_key = dc.channel_key
+        FROM staging.fct_image_detections fid
+        JOIN staging.fct_messages fm ON fid.message_id = fm.message_id
+        JOIN staging.dim_channels dc ON fm.channel_key = dc.channel_key
         GROUP BY dc.channel_name, fid.image_category
         ORDER BY dc.channel_name, total_images DESC;
     """)

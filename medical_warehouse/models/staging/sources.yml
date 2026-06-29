@@ -3,5 +3,10 @@ version: 2
 sources:
   - name: raw_data
     schema: raw
+    description: "Raw landing zone schema for scraped Telegram channel logs and computer vision inputs."
     tables:
       - name: telegram_messages
+        description: "Pure transactional JSON-to-relational row dump from the scraper pipeline."
+        
+      - name: yolo_image_detections
+        description: "Object detection classifications and confidence indexes generated via YOLOv8."
